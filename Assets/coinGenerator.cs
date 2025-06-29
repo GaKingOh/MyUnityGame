@@ -16,19 +16,20 @@ public class coinGenerator : MonoBehaviour
         script = player.GetComponent<playerController>();
         visitedPos = new HashSet<Vector2>();
 
-
+        while(visitedPos.Count != 150)
+        {
+            Vector2 pos = new Vector2(Random.Range(-10, 11), Random.Range(-6, 6));
+            if (!script.check_move(pos)) continue;
+            if (visitedPos.Contains(pos)) continue;
+            Instantiate(coinPrefab);
+            coinPrefab.transform.position = (Vector3)pos;
+            visitedPos.Add(pos);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(visitedPos.Count);
-        Vector2 pos = new Vector2(Random.Range(-11, 12), Random.Range(-7, 7));
-        if (!script.check_move(pos)) return;
-        if (visitedPos.Contains(pos)) return;
-        if (visitedPos.Count == 20) return;
-        Instantiate(coinPrefab);
-        coinPrefab.transform.position = (Vector3)pos;
-        visitedPos.Add(pos);
+
     }
 }
