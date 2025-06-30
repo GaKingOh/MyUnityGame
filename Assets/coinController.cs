@@ -6,10 +6,17 @@ public class coinController : MonoBehaviour
 {
     // Start is called before the first frame update
     GameObject player;
+    GameObject[] enemies;
     HashSet<Vector2> tmpHs;
     void Start()
     {
         player = GameObject.Find("player");
+        tmpHs = GameObject.Find("coinGenerator").GetComponent<coinGenerator>().visitedPos;
+        enemies = new GameObject[4];
+        for(int i=0;i<4;i++)
+        {
+            enemies[i] = GameObject.Find("monster_" + (i + 1));
+        }
     }
 
     // Update is called once per frame
@@ -19,9 +26,20 @@ public class coinController : MonoBehaviour
         float len = tmp.magnitude;
         if (len < 1.0f)
         {
-            tmpHs = GameObject.Find("coinGenerator").GetComponent<coinGenerator>().visitedPos;
             tmpHs.Remove((Vector2)transform.position);
             Destroy(gameObject);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2 tmp2 = enemies[i].transform.position - transform.position;
+            float len2 = tmp2.magnitude;
+            if(len2 < 1.0f)
+            {
+                Debug.Log("¾ÆÁøÂ¥!");
+                tmpHs.Remove((Vector2)transform.position);
+                Destroy(gameObject);
+            }
         }
     }
 }
