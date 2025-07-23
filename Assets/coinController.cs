@@ -13,7 +13,7 @@ public class coinController : MonoBehaviour
         player = GameObject.Find("player");
         tmpHs = GameObject.Find("coinGenerator").GetComponent<coinGenerator>().visitedPos;
         enemies = new GameObject[4];
-        for(int i=0;i<4;i++)
+        for(int i=0;i<1; i++)
         {
             enemies[i] = GameObject.Find("monster_" + (i + 1));
         }
@@ -30,7 +30,7 @@ public class coinController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i<1; i++)
         {
             Vector2 tmp2 = enemies[i].transform.position - transform.position;
             float len2 = tmp2.magnitude;

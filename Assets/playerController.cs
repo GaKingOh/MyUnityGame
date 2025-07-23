@@ -15,7 +15,7 @@ public class playerController : MonoBehaviour
     }
     void MoveEnemies()
     {
-        for (int i = 0; i<4;i++)
+        for (int i = 0; i<1;i++)
         {
             enemies[i].GetComponent<monsterController>().MoveMon();
         }

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class monsterController : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -17,32 +17,44 @@ public class monsterController : MonoBehaviour
     {
         return -11 <= pos.x && pos.x <= 11 && -6 <= pos.y && pos.y <= 6;
     }
+    /*
+     *  MoveMon 함수 몬스터를 움직이는 함수
+     * 플레이어가 움직였을 때 그 위치를 기준으로 앞으로 몬스터가 가야할 위치를 결정함
+     * 플레이어의 위치에서부터 현재 오브젝트 몬스터의 위치까지 bfs를 실행해서 역추적 함
+     * queue에 들어갈 값 {현재 x,y}
+     * 
+     * 
+     */
+    
     public void MoveMon()
     {
-        Vector2 diff = transform.position - player.transform.position; 
-        float dis = diff.magnitude;
-        Debug.Log(dis + '\n');
-        Vector2 tmp = (Vector2)transform.position;
-        for (int i = 0; i < 4; i++)
+        Vector2 start = (Vector2)player.GetComponent<playerController>().transform.position;
+        Queue<Vector2> q = new Queue<Vector2>();
+        q.Enqueue(start);
+
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+        visited.Add(start);
+
+        while(q.Any()==true)
         {
-            float minLen = dis;
-            Vector2 nextPos = new Vector2(transform.position.x + dx[i], transform.position.y + dy[i]);
-            if (!CheckBound(nextPos)) continue;
-            if (!player.GetComponent<playerController>().check_move(nextPos)) continue;
-            Vector2 tmp2 = nextPos - (Vector2)player.transform.position;
-            float dis2 = tmp2.magnitude; 
-            if(dis > 4.0f)
+            Vector2 here = q.Dequeue();
+
+            for (int i = 0; i < 4; i++)
             {
-                if(dis > dis2) tmp = nextPos;
-            }
-            else if(!randomMove)
-            {
-                int pick = Random.Range(0, 2);
-                if (pick == 1) tmp = nextPos;
+                Vector2 next = here + new Vector2(dx[i], dy[i]);
+                if (!CheckBound(next)) continue;
+                if(!player.GetComponent<playerController>().check_move(next)) continue;
+                if (visited.Contains(next)) continue;
+
+                if(next==(Vector2)transform.position)
+                {
+                    transform.position = new Vector3(here.x, here.y, transform.position.z);
+                    return;
+                }
+                q.Enqueue(next);
+                visited.Add(next);
             }
         }
-
-        transform.position = new Vector3(tmp.x,tmp.y,transform.position.z);
     }
     void Update()
     {
